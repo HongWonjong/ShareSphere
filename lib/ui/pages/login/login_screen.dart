@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/auth_view_model.dart';
-import '../home/home_screen.dart';
+import '../home/components/custom_app_bar.dart';
 import 'components/login_button.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -11,12 +11,19 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authViewModel = ref.watch(authViewModelProvider);
 
-    // 로그인 상태에 따라 화면 이동
+    // 로그인 성공 시 이전 화면으로 돌아감
     if (authViewModel.currentUser != null) {
-      return const HomeScreen();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pop(context);
+      });
     }
 
     return Scaffold(
+      appBar: CustomAppBar(
+        onLoginPressed: () {},
+        showBackButton: true,
+        hideLoginButton: true, // 로그인 버튼 숨김
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

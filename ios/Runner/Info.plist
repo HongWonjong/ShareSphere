@@ -34,6 +34,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+    <string>다운로드한 파일을 사진 라이브러리에 저장하기 위해 접근 권한이 필요합니다.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+    <string>로컬 네트워크를 사용하여 디버깅 서버와 통신합니다.</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

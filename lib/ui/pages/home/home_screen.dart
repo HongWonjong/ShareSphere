@@ -4,7 +4,7 @@ import '../../../models/file_item.dart';
 import '../../../providers/auth_view_model.dart';
 import '../../../providers/file_view_model.dart';
 import '../login/login_screen.dart';
-import 'components/header_button.dart';
+import 'components/custom_app_bar.dart';
 import 'components/sidebar_item.dart';
 import 'components/file_details_dialog.dart';
 
@@ -14,65 +14,27 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(fileViewModelProvider);
-    final authViewModel = ref.watch(authViewModelProvider);
     final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: CustomAppBar(
+        onLoginPressed: () {
+          final authViewModel = ref.read(authViewModelProvider);
+          if (authViewModel.currentUser != null) {
+            authViewModel.signOut();
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
+          }
+        },
+        showBackButton: false,
+        hideLoginButton: false, // 로그인 버튼 표시 (기본값이므로 생략 가능)
+      ),
       body: Column(
         children: [
-          // 헤더
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [theme.colorScheme.primary, theme.colorScheme.secondary],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'ShareSphere',
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: [
-                    HeaderButton(label: 'Top100'),
-                    HeaderButton(label: '드라마'),
-                    HeaderButton(label: '영화'),
-                    const SizedBox(width: 8),
-                    // 로그인/로그아웃 버튼
-                    TextButton(
-                      onPressed: () {
-                        if (authViewModel.currentUser != null) {
-                          authViewModel.signOut();
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const LoginScreen()),
-                          );
-                        }
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      ),
-                      child: Text(
-                        authViewModel.currentUser != null ? '로그아웃' : '로그인',
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           // 상단 메뉴 (가로 스크롤)
           Container(
             height: 60,
