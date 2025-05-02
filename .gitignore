@@ -2,6 +2,7 @@
 *.class
 *.log
 .env
+.env.debug
 *.pyc
 *.swp
 .DS_Store
