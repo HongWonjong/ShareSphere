@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/file_item.dart';
+import '../../../providers/auth_view_model.dart';
 import '../../../providers/file_view_model.dart';
+import '../login/login_screen.dart';
 import 'components/header_button.dart';
 import 'components/sidebar_item.dart';
 import 'components/file_details_dialog.dart';
@@ -12,6 +14,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(fileViewModelProvider);
+    final authViewModel = ref.watch(authViewModelProvider);
     final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -43,6 +46,28 @@ class HomeScreen extends ConsumerWidget {
                     HeaderButton(label: 'Top100'),
                     HeaderButton(label: '드라마'),
                     HeaderButton(label: '영화'),
+                    const SizedBox(width: 8),
+                    // 로그인/로그아웃 버튼
+                    TextButton(
+                      onPressed: () {
+                        if (authViewModel.currentUser != null) {
+                          authViewModel.signOut();
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          );
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      ),
+                      child: Text(
+                        authViewModel.currentUser != null ? '로그아웃' : '로그인',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -50,7 +75,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           // 상단 메뉴 (가로 스크롤)
           Container(
-            height: 60, // 고정 높이
+            height: 60,
             color: theme.colorScheme.surfaceContainerLow,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -64,7 +89,7 @@ class HomeScreen extends ConsumerWidget {
                   SidebarItem(title: '문서', icon: Icons.description),
                   SidebarItem(title: '이미지', icon: Icons.image),
                   SidebarItem(title: '만화', icon: Icons.book),
-                  SidebarItem(title: '애니', icon: Icons.animation),
+                  SidebarItem(title: '애니메이션', icon: Icons.animation),
                   SidebarItem(title: '스트리밍', icon: Icons.stream),
                 ],
               ),
@@ -123,7 +148,7 @@ class HomeScreen extends ConsumerWidget {
                         Text(
                           '1 2 3 4 5',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontSize: (theme.textTheme.bodyMedium?.fontSize ?? 14) * 1.5, // 숫자 크기 1.5배
+                            fontSize: (theme.textTheme.bodyMedium?.fontSize ?? 14) * 1.5,
                           ),
                         ),
                         IconButton(
